@@ -35,16 +35,29 @@ void setup() {
 //  video.play();
 }
 
+void drawImage(PImage img, int cX, int cY) {
+  pushMatrix();
+  imageMode(CENTER);
+  translate(cX, cY);
+  rotate(map(mouseX, 0, width, -PI, PI));
+  image(img, 0, 0);
+  popMatrix();
+}
+
 void draw() {
   if (webcam.available()) {
     webcam.read();
     background(0);
-    image(webcam, 0, 0, width / 2, height / 2);
-    image(webcam, 0, height / 2, width / 2, height / 2);
-    
-    
-    image(webcam, width/2, 0, width / 2, height / 2);
-    image(webcam, width/2, height / 2, width / 2, height / 2);
+    drawImage(webcam, width/4, height/4);
+    drawImage(webcam, width/4, 3*height/4);
+    drawImage(webcam, 3*width/4, height/4);
+    drawImage(webcam, 3*width/4, 3*height/4);
+//    image(webcam, 0, 0, width / 2, height / 2);
+//    image(webcam, 0, height / 2, width / 2, height / 2);
+//    
+//    
+//    image(webcam, width/2, 0, width / 2, height / 2);
+//    image(webcam, width/2, height / 2, width / 2, height / 2);
 //     saveFrame();
     opencv.loadImage(webcam);
 //    opencv.diff(initialImage);
