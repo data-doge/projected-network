@@ -1,19 +1,34 @@
 import gab.opencv.*;
 import processing.video.*;
+import java.awt.*;
 
 Capture webcam;
 // Movie video;
 OpenCV opencv;
 
+PImage initialImage;
+
 void setup() {
   // video = new Movie(this, "street.mov");
-  webcam = new Capture(this, 640, 480);
-  opencv = new OpenCV(this, webcam.width, webcam.height);
+  for(String captureInfo : Capture.list()) {
+    println(captureInfo);
+  }
+  webcam = new Capture(this, 640, 480, "USB2.0 Camera");
+  opencv = new OpenCV(this, webcam.width, webcam.height*2);
   size(webcam.width * 3, webcam.height);
   
-  opencv.startBackgroundSubtraction(5, 5, 0.5);
+  opencv.startBackgroundSubtraction(3, 3, 0.5);
   
   webcam.start();
+//  while (!webcam.available()) {
+//    try {
+//      Thread.sleep(10);
+//    } catch( Exception e) {
+//    }
+//  }
+//  
+//  webcam.read();
+//  initialImage = webcam;
   
 //  video.loop();
 //  video.play();
@@ -21,14 +36,17 @@ void setup() {
 
 void draw() {
   if (webcam.available()) {
-//    println("got capture");
     webcam.read();
     image(webcam, 0, 0);
     opencv.loadImage(webcam);
+//    opencv.diff(initialImage);
     opencv.updateBackground();
     image(opencv.getSnapshot(), webcam.width, 0);
     
+//    opencv.threshold((int)map(mouseX, 0, width, -100, 100));
+//    println((int)map(mouseX, 0, width, -100, 100));
     opencv.dilate();
+    opencv.erode();
     opencv.erode();
     image(opencv.getSnapshot(), webcam.width * 2, 0);
 
@@ -36,11 +54,19 @@ void draw() {
     stroke(255, 0, 0);
     strokeWeight(3);
     for (Contour contour : opencv.findContours()) {
-      pushMatrix();
-      contour.draw();
-      translate(webcam.width * 2, 0);
-      contour.draw();
-      popMatrix();
+      if (contour.area() > 5) {
+        Rectangle boundingBox = contour.getBoundingBox();
+        float centerX = boundingBox.x + boundingBox.width / 2;
+        float centerY = boundingBox.y + boundingBox.height / 2;
+        float radius = (boundingBox.width + boundingBox.height) / 2;
+        pushMatrix();
+//        contour.draw();
+//        ellipse(centerX, centerY, radius, radius);
+//        translate(webcam.width * 2, 0);
+//        contour.draw();
+//        ellipse(centerX, centerY, radius, radius);
+        popMatrix();
+      }
     }
   }
   
