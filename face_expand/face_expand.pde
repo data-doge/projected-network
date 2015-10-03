@@ -20,9 +20,6 @@ void draw() {
 
   image(video, 0, 0);
 
-  noFill();
-  stroke(0, 255, 0);
-  strokeWeight(3);
   Rectangle[] faces = opencv.detect();
   
   for (int i = 0; i < 10; i++) {
