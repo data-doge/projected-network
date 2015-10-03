@@ -28,7 +28,9 @@ void draw() {
       Rectangle face = faces[j];
       int scaledFaceWidth = (int)(scale * face.width);
       int scaledFaceHeight = (int)(scale * face.height);
-      copy(video.get(), face.x, face.y, face.width, face.height, face.x, face.y, scaledFaceWidth, scaledFaceHeight);
+      int newX = face.x + (face.width - scaledFaceWidth) / 2;
+      int newY = face.y + (face.height - scaledFaceHeight) / 2;
+      copy(video.get(), face.x, face.y, face.width, face.height, newX, newY, scaledFaceWidth, scaledFaceHeight);
     }
   }
 }
