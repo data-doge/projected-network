@@ -18,15 +18,21 @@ void draw() {
   scale(2);
   opencv.loadImage(video);
 
-  image(video, 0, 0 );
+  image(video, 0, 0);
 
   noFill();
   stroke(0, 255, 0);
   strokeWeight(3);
   Rectangle[] faces = opencv.detect();
   
-  for (int i = 0; i < faces.length; i++) {
-    rect(faces[i].x, faces[i].y, faces[i].width, faces[i].height);    
+  for (int i = 0; i < 10; i++) {
+    for (int j = 0; j < faces.length; j++) {
+      float scale = 1.0 / i;
+      Rectangle face = faces[j];
+      int scaledFaceWidth = (int)(scale * face.width);
+      int scaledFaceHeight = (int)(scale * face.height);
+      copy(video.get(), face.x, face.y, face.width, face.height, face.x, face.y, scaledFaceWidth, scaledFaceHeight);
+    }
   }
 }
 
