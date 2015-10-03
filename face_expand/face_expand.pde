@@ -22,7 +22,7 @@ void draw() {
 
   Rectangle[] faces = opencv.detect();
   
-  for (int i = 0; i < 10; i++) {
+  for (int i = 1; i < 10; i++) {
     for (int j = 0; j < faces.length; j++) {
       float scale = 1.0 / i;
       Rectangle face = faces[j];
