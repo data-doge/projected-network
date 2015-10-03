@@ -4,13 +4,14 @@ import java.awt.*;
 
 Capture video;
 OpenCV opencv;
+float tileDepth;
 
 void setup() {
   size(640, 480);
   video = new Capture(this, 640/2, 480/2);
   opencv = new OpenCV(this, 640/2, 480/2);
   opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE);  
-
+  tileDepth = 20;
   video.start();
 }
 
@@ -22,9 +23,9 @@ void draw() {
 
   Rectangle[] faces = opencv.detect();
   
-  for (int i = 1; i < 10; i++) {
+  for (float i = tileDepth; i > 0; i--) {
     for (int j = 0; j < faces.length; j++) {
-      float scale = 1.0 / i;
+      float scale = i / tileDepth;
       Rectangle face = faces[j];
       int scaledFaceWidth = (int)(scale * face.width);
       int scaledFaceHeight = (int)(scale * face.height);
