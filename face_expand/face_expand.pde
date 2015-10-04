@@ -6,37 +6,44 @@ Capture video;
 OpenCV opencv;
 float tileDepth;
 
-void setup() {
-  size(640, 480);
-  video = new Capture(this, 640/2, 480/2);
-  opencv = new OpenCV(this, 640/2, 480/2);
+void setup () {
+  int screenWidth = 640;
+  int screenHeight = 480;
+  size(screenWidth, screenHeight);
+  video = new Capture(this, screenWidth/2, screenHeight/2);
+  opencv = new OpenCV(this, screenWidth/2, screenHeight/2);
   opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE);  
-  tileDepth = 20;
+  tileDepth = 15;
   video.start();
 }
 
 void draw() {
   scale(2);
   opencv.loadImage(video);
-
   image(video, 0, 0);
-
-  Rectangle[] faces = opencv.detect();
   
+  Rectangle[] faces = opencv.detect();
+  copyFaces(faces);
+}
+
+void copyFaces (Rectangle[] faces) {
   for (float i = tileDepth; i > 0; i--) {
     for (int j = 0; j < faces.length; j++) {
-      float scale = i / tileDepth;
       Rectangle face = faces[j];
-      int scaledFaceWidth = (int)(scale * face.width);
-      int scaledFaceHeight = (int)(scale * face.height);
-      int newX = face.x + (face.width - scaledFaceWidth) / 2;
-      int newY = face.y + (face.height - scaledFaceHeight) / 2;
-      copy(video.get(), face.x, face.y, face.width, face.height, newX, newY, scaledFaceWidth, scaledFaceHeight);
+      float scale = i / tileDepth;
+      copyFace(face, scale);
     }
   }
 }
 
+void copyFace (Rectangle face, float scale) {
+  int scaledFaceWidth = (int)(scale * face.width);
+  int scaledFaceHeight = (int)(scale * face.height);
+  int newX = face.x + (face.width - scaledFaceWidth) / 2;
+  int newY = face.y + (face.height - scaledFaceHeight) / 2;
+  copy(video.get(), face.x, face.y, face.width, face.height, newX, newY, scaledFaceWidth, scaledFaceHeight);
+} 
 
-void captureEvent(Capture c) {
+void captureEvent (Capture c) {
   c.read();
 }
