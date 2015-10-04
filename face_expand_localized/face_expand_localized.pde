@@ -4,9 +4,11 @@ import java.awt.*;
 
 Capture webcam;
 OpenCV opencv;
-float tileDepth = 15;
+float tileDepth = 10;
 int screenWidth = 640;
 int screenHeight = 480;
+Rectangle[] faceRects;
+PImage[] faceImages;
 
 void setup () {
   size(screenWidth, screenHeight);
@@ -17,45 +19,42 @@ void setup () {
 }
 
 void draw() {
-  // read webcam 
+  loadFrame();
+  grabFaces();
+  renderFaces(tileDepth);
+}
+
+void loadFrame () {
   webcam.read();
-  // upload to opencv
   opencv.loadImage(webcam);
-  // grab each face, store in array
-  Rectangle[] faceRects = opencv.detect();
-  PImage[] faceImages = new PImage[faceRects.length];
+}
+
+void grabFaces () {
+  faceRects = opencv.detect();
+  faceImages = new PImage[faceRects.length];
   for (int i = 0; i < faceRects.length; i++) {
     Rectangle faceRect = faceRects[i];
     PImage faceImage = webcam.get(faceRect.x, faceRect.y, faceRect.width, faceRect.height);
     faceImages[i] = faceImage;
   }
-
-  // put large black rectangle black rectangle, which is size of the screen
-  rect(0, 0, screenWidth, screenHeight);
-
-  // for each face, put them on screen at same coordinates as before, and copyFaces on them
-  for (int i = 0; i < faceImages.length; i++) {
-    PImage faceImage = faceImages[i];
-    Rectangle faceRect = faceRects[i];
-    image(faceImage, faceRect.x, faceRect.y);
-  }
-
 }
 
-void copyFaces (Rectangle[] faces, float depth) {
+void renderFaces (float depth) {
+  rect(0, 0, screenWidth, screenHeight);
   for (float i = depth; i > 0; i--) {
-    for (int j = 0; j < faces.length; j++) {
-      Rectangle face = faces[j];
-      float scale = i / depth;
-      copyFace(face, scale);
+    float scale = i / depth;
+    for (int j = 0; j < faceImages.length; j++) {
+      PImage faceImage = faceImages[j];
+      Rectangle faceRect = faceRects[j];
+      pasteFace(faceImage, faceRect, scale);
     }
   }
 }
 
-void copyFace (Rectangle face, float scale) {
-  int scaledFaceWidth = (int)(scale * face.width);
-  int scaledFaceHeight = (int)(scale * face.height);
-  int newX = face.x + (face.width - scaledFaceWidth) / 2;
-  int newY = face.y + (face.height - scaledFaceHeight) / 2;
-  copy(webcam.get(), face.x, face.y, face.width, face.height, newX, newY, scaledFaceWidth, scaledFaceHeight);
+void pasteFace (PImage faceImage, Rectangle faceRect, float scale) {
+  int scaledFaceWidth = (int)(scale * faceRect.width);
+  int scaledFaceHeight = (int)(scale * faceRect.height);
+  int newX = faceRect.x + (faceRect.width - scaledFaceWidth) / 2;
+  int newY = faceRect.y + (faceRect.height - scaledFaceHeight) / 2;
+  image(faceImage, newX, newY, scaledFaceWidth, scaledFaceHeight);
 }
