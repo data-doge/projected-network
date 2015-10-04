@@ -10,10 +10,6 @@ void setup() {
   size(screenWidth, screenHeight);
   video = new Capture(this, screenWidth, screenHeight);
   opencv = new OpenCV(this, screenWidth, screenHeight);
-  opencv.gray();
-  opencv.threshold(100);
-  opencv.invert();
-
   video.start();
 }
 
