@@ -2,32 +2,44 @@ import gab.opencv.*;
 import processing.video.*;
 import java.awt.*;
 
-Capture video;
+Capture webcam;
 OpenCV opencv;
 float tileDepth = 15;
+int screenWidth = 640;
+int screenHeight = 480;
 
 void setup () {
-  int screenWidth = 640;
-  int screenHeight = 480;
   size(screenWidth, screenHeight);
-  video = new Capture(this, screenWidth, screenHeight);
+  webcam = new Capture(this, screenWidth, screenHeight);
   opencv = new OpenCV(this, screenWidth, screenHeight);
   opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE);
-  video.start();
+  webcam.start();
 }
 
 void draw() {
-  // read video 
-  video.read();
+  // read webcam 
+  webcam.read();
   // upload to opencv
-  opencv.loadImage(video);
+  opencv.loadImage(webcam);
   // grab each face, store in array
-  Rectangle[] faces = opencv.detect();
-  // create black rectangle, which is size of the screen
+  Rectangle[] faceRects = opencv.detect();
+  PImage[] faceImages = new PImage[faceRects.length];
+  for (int i = 0; i < faceRects.length; i++) {
+    Rectangle faceRect = faceRects[i];
+    PImage faceImage = webcam.get(faceRect.x, faceRect.y, faceRect.width, faceRect.height);
+    faceImages[i] = faceImage;
+  }
+
+  // put large black rectangle black rectangle, which is size of the screen
+  rect(0, 0, screenWidth, screenHeight);
 
   // for each face, put them on screen at same coordinates as before, and copyFaces on them
+  for (int i = 0; i < faceImages.length; i++) {
+    PImage faceImage = faceImages[i];
+    Rectangle faceRect = faceRects[i];
+    image(faceImage, faceRect.x, faceRect.y);
+  }
 
-  // write the updated black rectangle to image
 }
 
 void copyFaces (Rectangle[] faces, float depth) {
@@ -45,5 +57,5 @@ void copyFace (Rectangle face, float scale) {
   int scaledFaceHeight = (int)(scale * face.height);
   int newX = face.x + (face.width - scaledFaceWidth) / 2;
   int newY = face.y + (face.height - scaledFaceHeight) / 2;
-  copy(video.get(), face.x, face.y, face.width, face.height, newX, newY, scaledFaceWidth, scaledFaceHeight);
+  copy(webcam.get(), face.x, face.y, face.width, face.height, newX, newY, scaledFaceWidth, scaledFaceHeight);
 }
