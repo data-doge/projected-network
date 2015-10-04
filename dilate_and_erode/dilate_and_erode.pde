@@ -22,10 +22,16 @@ void draw() {
   video.read();
   opencv.loadImage(video);
   opencv.findScharrEdges(OpenCV.HORIZONTAL);
+  dilateAndErode(3);
   edges = opencv.getSnapshot();
   image(edges, 0, 0);
-  // opencv.dilate();
-  // opencv.erode();
-  // PImage contours = opencv.getSnapshot();
-  // image(contours, 0, 0);
+}
+
+void dilateAndErode (int iterations) {
+  for (int i = 0; i < iterations; i++) {
+    opencv.dilate();
+  }
+  for (int i = 0; i < iterations; i++) {
+    opencv.erode();
+  }
 }
