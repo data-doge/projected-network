@@ -1,4 +1,4 @@
-class HalfHalfSplit extends BaseSketch {
+class HalfHalfSplitSketch extends BaseSketch {
   OpenCV opencv;
   Capture webcam;
   
@@ -14,7 +14,7 @@ class HalfHalfSplit extends BaseSketch {
     imageMode(CENTER);
     translate(cX, cY);
     rotate(millis() / 10023f);
-    scale(pow(1.4, sin(millis() / 79f)));
+    scale(pow(1.4, sin(millis() / 7945f)));
     image(img, 0, 0, width/2, height/2);
     popMatrix();
   }

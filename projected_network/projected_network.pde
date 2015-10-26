@@ -18,7 +18,7 @@ void setup() {
   size(displayWidth, displayHeight);
   
   webcam.start();
-  sketches.add(new HalfHalfSplit());
+  sketches.add(new HalfHalfSplitSketch());
   
   setCurrentSketch(0);
 }
