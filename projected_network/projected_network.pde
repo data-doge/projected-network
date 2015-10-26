@@ -1,55 +1,34 @@
 import gab.opencv.*;
 import processing.video.*;
-import java.awt.*;
+import java.awt.Rectangle;
+import java.util.*;
+
+abstract class BaseSketch {
+  abstract void setup(Capture webcam, OpenCV opencv);
+  abstract void draw();
+}
+
+List<BaseSketch> sketches = new ArrayList();
+int currentSketchIndex = 0;
 
 Capture webcam;
-OpenCV opencv;
 
 void setup() {
   webcam = new Capture(this, 640, 480);
-  opencv = new OpenCV(this, webcam.width, webcam.height);
   size(displayWidth, displayHeight);
   
-  opencv.startBackgroundSubtraction(3, 3, 0.5);
-  
   webcam.start();
+  sketches.add(new HalfHalfSplit());
+  
+  setCurrentSketch(0);
 }
 
 void draw() {
-  if (webcam.available()) {
-    webcam.read();
-    background(0);
-    image(webcam, 0, 0, width / 2, height / 2);
-    image(webcam, 0, height / 2, width / 2, height / 2);
-    
-    
-    image(webcam, width/2, 0, width / 2, height / 2);
-    image(webcam, width/2, height / 2, width / 2, height / 2);
-    
-    opencv.loadImage(webcam);
-    opencv.updateBackground();
-    opencv.dilate();
-    opencv.erode();
-    opencv.erode();
+  sketches.get(currentSketchIndex).draw();
+}
 
-    noFill();
-    stroke(255, 0, 0);
-    strokeWeight(3);
-    for (Contour contour : opencv.findContours()) {
-      if (contour.area() > 200) {
-        Rectangle boundingBox = contour.getBoundingBox();
-        float centerX = boundingBox.x + boundingBox.width / 2;
-        float centerY = boundingBox.y + boundingBox.height / 2;
-        float radius = (boundingBox.width + boundingBox.height) / 2;
-        pushMatrix();
-        scale ( (float)width / webcam.width, (float)height / webcam.height );
-        contour.draw();
-        ellipse(centerX, centerY, radius, radius);
-        translate(webcam.width * 2, 0);
-        contour.draw();
-        ellipse(centerX, centerY, radius, radius);
-        popMatrix();
-      }
-    }
-  }
+void setCurrentSketch(int index) {
+  currentSketchIndex = index;
+  OpenCV opencv = new OpenCV(this, webcam.width, webcam.height);
+  sketches.get(index).setup(webcam, opencv);
 }
