@@ -19,20 +19,35 @@ void setup() {
   
   webcam.start();
   sketches.add(new HalfHalfSplitSketch());
+  sketches.add(new HSVOffsetSketch());
   
-  setCurrentSketch(0);
+  pushStyle();
+  setCurrentSketch(1);
 }
 
 void draw() {
   pushMatrix();
-  pushStyle();
-  sketches.get(currentSketchIndex).draw();
-  popStyle();
+  getCurrentSketch().draw();
   popMatrix();
+  println(frameRate);
+}
+
+void keyPressed() {
+  if(key >= '1' && key <= '9') {
+    setCurrentSketch(key - '1');
+  }
+}
+
+BaseSketch getCurrentSketch() {
+  return sketches.get(currentSketchIndex);
 }
 
 void setCurrentSketch(int index) {
+  popStyle();
   currentSketchIndex = index;
   OpenCV opencv = new OpenCV(this, webcam.width, webcam.height);
-  sketches.get(index).setup(webcam, opencv);
+  
+  pushStyle();
+  println("set sketch to " + getCurrentSketch());
+  getCurrentSketch().setup(webcam, opencv);
 }
