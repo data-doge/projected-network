@@ -3,36 +3,16 @@ import processing.video.*;
 import java.awt.*;
 
 Capture webcam;
-// Movie video;
 OpenCV opencv;
 
-PImage initialImage;
-
 void setup() {
-  // video = new Movie(this, "street.mov");
-//  for(String captureInfo : Capture.list()) {
-//    println(captureInfo);
-//  }
-  webcam = new Capture(this, 640, 480, "USB2.0 Camera");
+  webcam = new Capture(this, 640, 480);
   opencv = new OpenCV(this, webcam.width, webcam.height);
-  // size(webcam.width * 3, webcam.height);
   size(displayWidth, displayHeight);
   
   opencv.startBackgroundSubtraction(3, 3, 0.5);
   
   webcam.start();
-//  while (!webcam.available()) {
-//    try {
-//      Thread.sleep(10);
-//    } catch( Exception e) {
-//    }
-//  }
-//  
-//  webcam.read();
-//  initialImage = webcam;
-  
-//  video.loop();
-//  video.play();
 }
 
 void draw() {
@@ -45,18 +25,12 @@ void draw() {
     
     image(webcam, width/2, 0, width / 2, height / 2);
     image(webcam, width/2, height / 2, width / 2, height / 2);
-//     saveFrame();
-    opencv.loadImage(webcam);
-//    opencv.diff(initialImage);
-    opencv.updateBackground();
-//    image(opencv.getSnapshot(), webcam.width, 0);
     
-//    opencv.threshold((int)map(mouseX, 0, width, -100, 100));
-//    println((int)map(mouseX, 0, width, -100, 100));
+    opencv.loadImage(webcam);
+    opencv.updateBackground();
     opencv.dilate();
     opencv.erode();
     opencv.erode();
-//    image(opencv.getSnapshot(), 0, 0, width, height);
 
     noFill();
     stroke(255, 0, 0);
@@ -69,33 +43,13 @@ void draw() {
         float radius = (boundingBox.width + boundingBox.height) / 2;
         pushMatrix();
         scale ( (float)width / webcam.width, (float)height / webcam.height );
-//        contour.draw();
-//        ellipse(centerX, centerY, radius, radius);
-//        translate(webcam.width * 2, 0);
-//        contour.draw();
-//        ellipse(centerX, centerY, radius, radius);
+        contour.draw();
+        ellipse(centerX, centerY, radius, radius);
+        translate(webcam.width * 2, 0);
+        contour.draw();
+        ellipse(centerX, centerY, radius, radius);
         popMatrix();
       }
     }
   }
-  
-//  image(video, 0, 0);  
-//  opencv.loadImage(video);
-//  
-//  opencv.updateBackground();
-//  
-//  opencv.dilate();
-//  opencv.erode();
-//
-//  noFill();
-//  stroke(255, 0, 0);
-//  strokeWeight(3);
-//  for (Contour contour : opencv.findContours()) {
-//    contour.draw();
-//  }
 }
-
-//
-//void movieEvent(Movie m) {
-//  m.read();
-//}
