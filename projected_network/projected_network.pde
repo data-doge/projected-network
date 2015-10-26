@@ -24,7 +24,11 @@ void setup() {
 }
 
 void draw() {
+  pushMatrix();
+  pushStyle();
   sketches.get(currentSketchIndex).draw();
+  popStyle();
+  popMatrix();
 }
 
 void setCurrentSketch(int index) {
