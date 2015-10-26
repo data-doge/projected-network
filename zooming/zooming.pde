@@ -18,7 +18,7 @@ void draw () {
     video.read();
   
     if (counter > 0) {
-      counter-=0.2;
+      counter -= 0.05;
     } else {
       counter = numOfSteps;
     }
@@ -30,7 +30,7 @@ void draw () {
     int newX = (screenWidth - scaledFrameWidth) / 2;
     int newY = (screenHeight - scaledFrameHeight) / 2;
 
-    tint(255, 200);
+    tint(255, 20);
     image(video, newX, newY, scaledFrameWidth, scaledFrameHeight);
     
   }
