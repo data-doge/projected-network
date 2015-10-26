@@ -4,7 +4,6 @@ import java.awt.*;
 Capture video;
 float granularity = 0.001;
 
-
 float maxZoom = 1000;
 float minZoom = 900;
 float currentZoom = 1000;
@@ -13,6 +12,7 @@ String zoomDir = "smaller";
 
 int zoomSpeed = 6;
 int rotationSpeed = 3;
+int opacity = 1;
 
 String camera;
 
@@ -59,7 +59,7 @@ void draw () {
     int newX = (width - scaledFrameWidth) / 2;
     int newY = (height - scaledFrameHeight) / 2;
 
-    tint(255, 1);
+    tint(255, opacity);
     translate(width / 2, height / 2);
     rotate(radians(currentDegrees));
     translate(-width / 2, -height / 2);
