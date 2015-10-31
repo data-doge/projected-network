@@ -24,6 +24,21 @@ void draw() {
   opencv.findScharrEdges(OpenCV.HORIZONTAL);
   dilateAndErode(3);
   edges = opencv.getSnapshot();
+
+
+  loadPixels();
+  for (int i = 0; i < pixels.length; i++) {
+    color pixel = pixels[i];
+    float red = red(pixel);
+    float green = green(pixel);
+    float blue = blue(pixel);
+    float brightness = (red + green + blue) / 3;
+    println(brightness);
+    pixels[i] = color(red, green, brightness);
+  }
+  // go through each pixel, and ...
+    // map its darkness to a color within the visible spectrum (red -> blue)
+
   image(edges, 0, 0);
 }
 

@@ -4,9 +4,9 @@ import java.awt.*;
 
 Capture webcam;
 OpenCV opencv;
-float tileDepth = 10;
-int screenWidth = 640;
-int screenHeight = 480;
+float tileDepth = 7;
+int screenWidth = 960;
+int screenHeight = 720;
 Rectangle[] faceRects;
 PImage[] faceImages;
 
