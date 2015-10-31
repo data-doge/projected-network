@@ -14,6 +14,7 @@ void setup () {
   opencv = new OpenCV(this, screenWidth, screenHeight);
   opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE);
   video.start();
+//  blendMode(SUBTRACT);
 }
 
 void draw() {
