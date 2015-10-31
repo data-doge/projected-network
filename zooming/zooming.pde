@@ -4,7 +4,7 @@ import java.awt.*;
 int centerX, centerY;
 
 Capture video;
-PGraphics graphicalMask;
+PGraphics mask;
 PImage currentFrame;
 
 float granularity = 0.001;
@@ -100,14 +100,14 @@ int scaledFrameHeight () {
 }
 
 // void maskFrame () {
-//   graphicalMask = createGraphics(currentFrame.width, currentFrame.height, JAVA2D);
-//   graphicalMask.beginDraw();
-//   graphicalMask.noStroke();
-//   graphicalMask.ellipse(centerX, centerY, currentFrame.height / 3 * 2, currentFrame.height / 3 * 2);
-//   graphicalMask.endDraw();
-//   currentFrame.mask(graphicalMask);
+//   mask = createGraphics(currentFrame.width, currentFrame.height, JAVA2D);
+//   mask.beginDraw();
+//   mask.noStroke();
+//   mask.ellipse(centerX, centerY, currentFrame.height, currentFrame.height);
+//   mask.endDraw();
+//   currentFrame.mask(mask);
 // }
 
-void printFrame () { 
+void printFrame () {
   image(currentFrame, centerX, centerY, scaledFrameWidth(), scaledFrameHeight());
 }
