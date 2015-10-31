@@ -4,7 +4,7 @@ import java.awt.Rectangle;
 import java.util.*;
 
 abstract class BaseSketch {
-  abstract void setup(Capture webcam, OpenCV opencv);
+  abstract void setup(Capture webcam, OpenCV opencv, PGraphics g);
   abstract void draw();
 }
 
@@ -13,22 +13,46 @@ int currentSketchIndex = 0;
 
 Capture webcam;
 
+PGraphics texture;
+
 void setup() {
   webcam = new Capture(this, 640, 480);
-  size(displayWidth, displayHeight);
+  println("got webcam");
+  size(displayWidth, displayHeight, P2D);
+  
+  texture = createGraphics(width, height, P2D);
+  println("created graphics");
   
   webcam.start();
+  println("started webcam");
+  
   sketches.add(new HalfHalfSplitSketch());
   sketches.add(new HSVOffsetSketch());
+  println("added sketches");
   
   pushStyle();
-  setCurrentSketch(1);
+  setCurrentSketch(0);
+  println("set first sketch");
 }
 
 void draw() {
-  pushMatrix();
+  texture.beginDraw();
+  texture.pushMatrix();
   getCurrentSketch().draw();
-  popMatrix();
+  texture.popMatrix();
+  texture.endDraw();
+  
+  
+  background(0);
+  fill(255); noStroke();
+  beginShape();
+  texture(texture);
+  vertex(160, 0, 0, 0);
+  vertex(1098, 0, width, 0);
+  vertex(1056, 1078, width, height);
+  vertex(103, 739, 0, height);
+  endShape(CLOSE);
+  
   println(frameRate);
 }
 
@@ -49,5 +73,7 @@ void setCurrentSketch(int index) {
   
   pushStyle();
   println("set sketch to " + getCurrentSketch());
-  getCurrentSketch().setup(webcam, opencv);
+  texture.beginDraw();
+  getCurrentSketch().setup(webcam, opencv, texture);
+  texture.endDraw();
 }
