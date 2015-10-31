@@ -22,7 +22,8 @@ void setup() {
   sketches.add(new HSVOffsetSketch());
   sketches.add(new Zooming());
   sketches.add(new BackgroundSubtract());
-  
+  sketches.add(new DilateAndErode());
+
   pushStyle();
   setCurrentSketch(1);
 }
