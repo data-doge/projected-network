@@ -28,16 +28,21 @@ void setup() {
   
   sketches.add(new HalfHalfSplitSketch());
   sketches.add(new HSVOffsetSketch());
+  sketches.add(new Zooming());
+  sketches.add(new BackgroundSubtract());
+  sketches.add(new DilateAndErode());
   println("added sketches");
-  
+
   pushStyle();
-  setCurrentSketch(0);
+  setCurrentSketch(2);
   println("set first sketch");
 }
 
 void draw() {
   texture.beginDraw();
   texture.pushMatrix();
+  texture.fill(255, 129, millis() % 255);
+  texture.rect(0, 0, width, height);
   getCurrentSketch().draw();
   texture.popMatrix();
   texture.endDraw();
@@ -53,7 +58,7 @@ void draw() {
   vertex(103, 739, 0, height);
   endShape(CLOSE);
   
-  println(frameRate);
+//  println(frameRate);
 }
 
 void keyPressed() {
@@ -67,13 +72,17 @@ BaseSketch getCurrentSketch() {
 }
 
 void setCurrentSketch(int index) {
-  popStyle();
-  currentSketchIndex = index;
-  OpenCV opencv = new OpenCV(this, webcam.width, webcam.height);
-  
-  pushStyle();
-  println("set sketch to " + getCurrentSketch());
-  texture.beginDraw();
-  getCurrentSketch().setup(webcam, opencv, texture);
-  texture.endDraw();
+  if (index < sketches.size()) {
+    popStyle();
+    currentSketchIndex = index;
+    OpenCV opencv = new OpenCV(this, webcam.width, webcam.height);
+    
+    pushStyle();
+    println("set sketch to " + getCurrentSketch());
+    texture.beginDraw();
+    texture.imageMode(CORNER);
+    texture.blendMode(BLEND);
+    getCurrentSketch().setup(webcam, opencv, texture);
+    texture.endDraw();
+  }
 }

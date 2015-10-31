@@ -1,71 +1,113 @@
 import processing.video.*;
 import java.awt.*;
 
+int centerX, centerY;
+
 Capture video;
+PGraphics mask;
+PImage currentFrame;
+
 float granularity = 0.001;
 
 float maxZoom = 1000;
-float minZoom = 900;
+float minZoom = 1;
 float currentZoom = 1000;
 int currentDegrees = 0;
 String zoomDir = "smaller";
 
-int zoomSpeed = 6;
-int rotationSpeed = 3;
+int zoomSpeed = 1;
+int rotationSpeed = 1;
 int opacity = 1;
-
-String camera;
 
 void setup () {
   size(displayWidth, displayHeight);
-  String[] cameras = Capture.list();
-  camera = cameras[0];
-  for (int i = 0; i < cameras.length; i++) {
-    println(cameras[i]);
-  }
-  video = new Capture(this, camera);
-  video.start();
+  imageMode(CENTER);
+  centerX = width / 2;
+  centerY = height / 2;
+  initializeVideo();
+  background(0);
   blendMode(SUBTRACT);
 }
 
 void draw () {
   if (video.available() == true) {
-    video.read();
-//    println(camera);
-    println(frameRate);
-        
-    if (zoomDir == "smaller") {
-      currentZoom -= zoomSpeed;
-    } else if (zoomDir == "bigger") {
-      currentZoom += zoomSpeed;
-    }
-    
-    if (currentZoom < minZoom) {
-      zoomDir = "bigger";
-    } else if (currentZoom > maxZoom) {
-      zoomDir = "smaller";
-    }
-    
-    if (currentDegrees < 360) {
-      currentDegrees += rotationSpeed;
-    } else {
-      currentDegrees = 0;
-    }
-
-    float scale = currentZoom * granularity;
-
-    int scaledFrameWidth = (int)(scale * width);
-    int scaledFrameHeight = (int)(scale * height);
-    int newX = (width - scaledFrameWidth) / 2;
-    int newY = (height - scaledFrameHeight) / 2;
-
+    getFrame();
+    setZoom();        
+    setDirection(); 
+    setRotation();
+    rotateFrame();
+    // maskFrame();
     tint(255, opacity);
-    translate(width / 2, height / 2);
-    rotate(radians(currentDegrees));
-    translate(-width / 2, -height / 2);
-    
-    // check out blend, burn, dodge
-    image(video, newX, newY, scaledFrameWidth, scaledFrameHeight);
-    
+    printFrame();
   }
+}
+
+void initializeVideo () {
+  String[] cameras = Capture.list();
+  String cameraName = cameras[0];
+  for (int i = 0; i < cameras.length; i++) {
+    println(cameras[i]);
+  }
+  video = new Capture(this, cameraName);
+  video.start();
+}
+
+void getFrame () {
+  video.read();
+  currentFrame = video.get();
+}
+
+void setZoom () {
+  if (zoomDir == "smaller") {
+    currentZoom -= zoomSpeed;
+  } else if (zoomDir == "bigger") {
+    currentZoom += zoomSpeed;
+  }  
+}
+
+void setDirection () {
+  if (currentZoom < minZoom) {
+    zoomDir = "bigger";
+  } else if (currentZoom > maxZoom) {
+    zoomDir = "smaller";
+  }
+}
+
+void setRotation () {
+  if (currentDegrees < 360) {
+    currentDegrees += rotationSpeed;
+  } else {
+    currentDegrees = 0;
+  }
+}
+
+void rotateFrame () {
+  translate(centerX, centerY);
+  rotate(radians(currentDegrees));
+  translate(-centerX, -centerY);  
+}
+
+float scale () {
+  return currentZoom * granularity;
+}
+
+int scaledFrameWidth () {
+  return (int)(scale() * width);
+}
+
+int scaledFrameHeight () {
+  return (int)(scale() * height);
+}
+
+// void maskFrame () {
+//   mask = createGraphics(currentFrame.width, currentFrame.height, JAVA2D);
+//   mask.beginDraw();
+//   mask.noStroke();
+//   mask.ellipse(centerX, centerY, currentFrame.height, currentFrame.height);
+//   mask.endDraw();
+//   currentFrame.mask(mask);
+// }
+
+void printFrame () {
+  image(currentFrame, centerX, centerY, scaledFrameWidth(), scaledFrameHeight());
 }

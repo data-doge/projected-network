@@ -14,15 +14,18 @@ void setup () {
   opencv = new OpenCV(this, screenWidth, screenHeight);
   opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE);
   video.start();
+//  blendMode(SUBTRACT);
 }
 
 void draw() {
-  video.read();
-  opencv.loadImage(video);
-  image(video, 0, 0);
-  
-  Rectangle[] faces = opencv.detect();
-  copyFaces(faces, tileDepth);
+  if (video.available() == true) {
+    video.read();
+    opencv.loadImage(video);
+    image(video, 0, 0);
+    
+    Rectangle[] faces = opencv.detect();
+    copyFaces(faces, tileDepth);
+  }
 }
 
 void copyFaces (Rectangle[] faces, float depth) {
