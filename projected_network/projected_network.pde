@@ -21,6 +21,7 @@ void setup() {
   sketches.add(new HalfHalfSplitSketch());
   sketches.add(new HSVOffsetSketch());
   sketches.add(new Zooming());
+  sketches.add(new BackgroundSubtract());
   
   pushStyle();
   setCurrentSketch(1);
