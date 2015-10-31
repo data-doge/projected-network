@@ -4,6 +4,9 @@ import java.awt.*;
 
 Capture webcam;
 OpenCV opencv;
+int h = 0;
+int s = 0;
+int b = 0;
 
 void setup() {
   webcam = new Capture(this, 640, 480);
@@ -13,6 +16,8 @@ void setup() {
   opencv.startBackgroundSubtraction(3, 3, 0.5);
   
   webcam.start();
+  blendMode(SUBTRACT);
+  colorMode(HSB, 360, 100, 100);
 }
 
 void draw() {
@@ -28,8 +33,9 @@ void draw() {
     opencv.erode();
 
     noFill();
-    stroke(255, 0, 0);
-    strokeWeight(3);
+    changeColor();
+    stroke(h % 360, s % 100, b % 100);
+    strokeWeight(1);
     for (Contour contour : opencv.findContours()) {
       if (contour.area() > 200) {
         Rectangle boundingBox = contour.getBoundingBox();
@@ -47,4 +53,10 @@ void draw() {
       }
     }
   }
+}
+
+void changeColor () {
+  h += 1;
+  s += 1;
+  b = 99;
 }
