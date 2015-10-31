@@ -20,6 +20,7 @@ void setup() {
   webcam.start();
   sketches.add(new HalfHalfSplitSketch());
   sketches.add(new HSVOffsetSketch());
+  sketches.add(new Zooming());
   
   pushStyle();
   setCurrentSketch(1);
@@ -43,6 +44,10 @@ BaseSketch getCurrentSketch() {
 }
 
 void setCurrentSketch(int index) {
+  // (EL) reset imageMode here because in one of my sketches I set imageMode to CENTER
+  imageMode(CORNER);
+  blendMode(BLEND);
+
   popStyle();
   currentSketchIndex = index;
   OpenCV opencv = new OpenCV(this, webcam.width, webcam.height);
