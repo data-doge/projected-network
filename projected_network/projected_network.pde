@@ -36,7 +36,7 @@ void draw() {
 }
 
 void keyPressed() {
-  if(key >= '1' && key <= '9') {
+  if(key >= '1' && key <= '5') {
     setCurrentSketch(key - '1');
   }
 }
