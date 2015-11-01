@@ -61,6 +61,11 @@ void draw() {
     endShape(CLOSE);
   }
   
+  // 
+  if (millis() - millisThisSketchStarted >= 60000) {
+    setCurrentSketch(currentSketchIndex+1);
+  }
+  
   println(frameRate);
 }
 
@@ -74,20 +79,21 @@ BaseSketch getCurrentSketch() {
   return sketches.get(currentSketchIndex);
 }
 
+int millisThisSketchStarted = 0;
 void setCurrentSketch(int index) {
-  if (index < sketches.size()) {
-    popStyle();
-    currentSketchIndex = index;
-    opencv = new OpenCV(this, _webcam.width, _webcam.height);
-    
-    pushStyle();
-    println("set sketch to " + getCurrentSketch());
-    texture = createGraphics(width, height);
+  index = index % sketches.size();
+  popStyle();
+  currentSketchIndex = index;
+  opencv = new OpenCV(this, _webcam.width, _webcam.height);
+  
+  millisThisSketchStarted = millis();
+  pushStyle();
+  println("set sketch to " + getCurrentSketch());
+  texture = createGraphics(width, height);
 
-    texture.beginDraw();
-    texture.imageMode(CORNER);
-    texture.blendMode(BLEND);
-    getCurrentSketch().setup(opencv, texture);
-    texture.endDraw();
-  }
+  texture.beginDraw();
+  texture.imageMode(CORNER);
+  texture.blendMode(BLEND);
+  getCurrentSketch().setup(opencv, texture);
+  texture.endDraw();
 }
