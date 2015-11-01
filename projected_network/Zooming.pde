@@ -7,7 +7,7 @@ class Zooming extends BaseSketch {
   float granularity = 0.001;
 
   float maxZoom = 1000;
-  float minZoom = 1;
+  float minZoom = 700;
   float currentZoom = 1000;
   int currentDegrees = 0;
   String zoomDir = "smaller";
@@ -28,14 +28,13 @@ class Zooming extends BaseSketch {
   }
 
   void draw (PImage video) {
-//    setZoom();
-//    setDirection(); 
-//    setRotation();
-//    rotateFrame();
-//    // maskFrame();
+    setZoom();
+    setDirection(); 
+    setRotation();
+    rotateFrame();
+    // maskFrame();
 //    g.tint(255, opacity);
     printFrame(video);
-//    g.image(video, 0, 0, width, height);
   }
   
   void setZoom () {
