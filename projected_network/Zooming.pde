@@ -17,8 +17,11 @@ class Zooming extends BaseSketch {
   int opacity = 1;
 
   PGraphics g;
+  
+  OpenCV opencv;
 
   void setup (OpenCV opencv, PGraphics g) {
+    this.opencv = opencv;
     this.g = g;
     g.imageMode(CENTER);
     centerX = width / 2;
@@ -33,7 +36,9 @@ class Zooming extends BaseSketch {
     rotateFrame();
     // maskFrame();
     //    g.tint(255, opacity);
-    printFrame(video);
+    opencv.loadImage(video);
+    opencv.equalizeHistogram();
+    printFrame(opencv.getSnapshot());
   }
 
   void setZoom () {
@@ -88,11 +93,11 @@ class Zooming extends BaseSketch {
   // }
 
   void printFrame (PImage currentFrame) {
-    if (frameCount % 5 < 4) {
-      g.blendMode(ADD);
-    } else {
+//    if (frameCount % 5 < 4) {
+//      g.blendMode(ADD);
+//    } else {
       g.blendMode(SUBTRACT);
-    }
+//    }
     g.image(currentFrame, centerX, centerY, scaledFrameWidth(), scaledFrameHeight());
   }
 }

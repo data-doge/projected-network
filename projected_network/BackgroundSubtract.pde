@@ -22,7 +22,7 @@ class BackgroundSubtract extends BaseSketch {
     
     opencv.loadImage(video);
     opencv.equalizeHistogram();
-    g.image(opencv.getSnapshot(), 0, 0);
+    g.image(opencv.getSnapshot(), 0, 0, width, height);
     opencv.updateBackground();
 
     g.noFill();
