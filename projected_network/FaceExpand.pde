@@ -1,26 +1,23 @@
 class FaceExpand extends BaseSketch {
-  Capture video;
   OpenCV opencv;
   PGraphics g;
   float tileDepth = 10;
   
-  void setup (Capture video, OpenCV opencv, PGraphics g) {
-    this.video = video;
+  void setup (OpenCV opencv, PGraphics g) {
     this.opencv = opencv;
     this.g = g;
     opencv.loadCascade(OpenCV.CASCADE_FRONTALFACE);
   //  blendMode(SUBTRACT);
   }
-
-
-  void draw() {
-    if (video.available() == true) {
-      video.read();
-      opencv.loadImage(video);
-      g.image(video, 0, 0);
-      Rectangle[] faces = opencv.detect();
-      copyFaces(faces, tileDepth);
-    }
+  
+  PImage video;
+  
+  void draw(PImage video) {
+    this.video = video;
+    opencv.loadImage(video);
+    g.image(video, 0, 0);
+    Rectangle[] faces = opencv.detect();
+    copyFaces(faces, tileDepth);
   }
 
   void copyFaces (Rectangle[] faces, float depth) {

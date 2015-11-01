@@ -1,12 +1,9 @@
 class DilateAndErode extends BaseSketch {
-
-  Capture video;
   OpenCV opencv;
   PGraphics g;
   PImage edges;
 
-  void setup(Capture video, OpenCV opencv, PGraphics g) {
-    this.video = video;
+  void setup(OpenCV opencv, PGraphics g) {
     this.opencv = opencv;
     this.g = g;
     opencv.gray();
@@ -14,8 +11,7 @@ class DilateAndErode extends BaseSketch {
     opencv.invert();
   }
 
-  void draw() {
-    video.read();
+  void draw(PImage video) {
     opencv.loadImage(video);
     opencv.findScharrEdges(OpenCV.HORIZONTAL);
     dilateAndErode(3);

@@ -2,9 +2,7 @@ class Zooming extends BaseSketch {
 
   int centerX, centerY;
 
-  Capture video;
   PGraphics mask;
-  PImage currentFrame;
 
   float granularity = 0.001;
 
@@ -20,8 +18,7 @@ class Zooming extends BaseSketch {
 
   PGraphics g;
 
-  void setup (Capture video, OpenCV opencv, PGraphics g) {
-    this.video = video;
+  void setup (OpenCV opencv, PGraphics g) {
     this.g = g;
     g.imageMode(CENTER);
     centerX = width / 2;
@@ -30,28 +27,17 @@ class Zooming extends BaseSketch {
     g.blendMode(SUBTRACT);
   }
 
-  void draw () {
-    if (video.available() == true) {
-      getFrame();
-      setZoom();        
-      setDirection(); 
-      setRotation();
-      rotateFrame();
-      // maskFrame();
-      g.tint(255, opacity);
-      printFrame();
-      
-      g.image(video, 0, 0);
-    }
-    image(video, 0, 0);
-    background(255);
+  void draw (PImage video) {
+//    setZoom();
+//    setDirection(); 
+//    setRotation();
+//    rotateFrame();
+//    // maskFrame();
+//    g.tint(255, opacity);
+    printFrame(video);
+//    g.image(video, 0, 0, width, height);
   }
-
-  void getFrame () {
-    video.read();
-    currentFrame = video.get();
-  }
-
+  
   void setZoom () {
     if (zoomDir == "smaller") {
       currentZoom -= zoomSpeed;
@@ -103,7 +89,7 @@ class Zooming extends BaseSketch {
   //   currentFrame.mask(mask);
   // }
 
-  void printFrame () {
+  void printFrame (PImage currentFrame) {
     g.image(currentFrame, centerX, centerY, scaledFrameWidth(), scaledFrameHeight());
   }
 

@@ -4,26 +4,25 @@ import java.awt.Rectangle;
 import java.util.*;
 
 abstract class BaseSketch {
-  abstract void setup(Capture webcam, OpenCV opencv, PGraphics g);
-  abstract void draw();
+  abstract void setup(OpenCV opencv, PGraphics g);
+  abstract void draw(PImage webcamImage);
 }
 
 List<BaseSketch> sketches = new ArrayList();
 int currentSketchIndex = 0;
+OpenCV opencv;
 
-Capture webcam;
+Capture _webcam;
 
 PGraphics texture;
+PImage webcamImage;
 
 void setup() {
-  webcam = new Capture(this, 640, 480);
+  _webcam = new Capture(this, 640, 480);
   println("got webcam");
   size(displayWidth, displayHeight, P2D);
   
-  texture = createGraphics(width, height, P2D);
-  println("created graphics");
-  
-  webcam.start();
+  _webcam.start();
   println("started webcam");
   
   sketches.add(new HalfHalfSplitSketch());
@@ -39,26 +38,30 @@ void setup() {
 }
 
 void draw() {
-  texture.beginDraw();
-  texture.pushMatrix();
-  texture.fill(255, 129, millis() % 255);
-  texture.rect(0, 0, width, height);
-  getCurrentSketch().draw();
-  texture.popMatrix();
-  texture.endDraw();
+  if(_webcam.available()) {
+    _webcam.read();
+    webcamImage = _webcam.get();
+    texture.beginDraw();
+    texture.pushMatrix();
+  //  texture.fill(255, 129, millis() % 255);
+  //  texture.rect(0, 0, width, height);
+    getCurrentSketch().draw(webcamImage);
+    texture.popMatrix();
+    texture.endDraw();
+    
+    
+    background(0);
+    fill(255); noStroke();
+    beginShape();
+    texture(texture);
+    vertex(160, 0, 0, 0);
+    vertex(1098, 0, width, 0);
+    vertex(1056, 1078, width, height);
+    vertex(103, 739, 0, height);
+    endShape(CLOSE);
+  }
   
-  
-  background(0);
-  fill(255); noStroke();
-  beginShape();
-  texture(texture);
-  vertex(160, 0, 0, 0);
-  vertex(1098, 0, width, 0);
-  vertex(1056, 1078, width, height);
-  vertex(103, 739, 0, height);
-  endShape(CLOSE);
-  
-//  println(frameRate);
+  println(frameRate);
 }
 
 void keyPressed() {
@@ -75,14 +78,16 @@ void setCurrentSketch(int index) {
   if (index < sketches.size()) {
     popStyle();
     currentSketchIndex = index;
-    OpenCV opencv = new OpenCV(this, webcam.width, webcam.height);
+    opencv = new OpenCV(this, _webcam.width, _webcam.height);
     
     pushStyle();
     println("set sketch to " + getCurrentSketch());
+    texture = createGraphics(width, height);
+
     texture.beginDraw();
     texture.imageMode(CORNER);
     texture.blendMode(BLEND);
-    getCurrentSketch().setup(webcam, opencv, texture);
+    getCurrentSketch().setup(opencv, texture);
     texture.endDraw();
   }
 }

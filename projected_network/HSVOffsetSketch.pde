@@ -1,10 +1,8 @@
 class HSVOffsetSketch extends BaseSketch {
   OpenCV opencv;
-  Capture webcam;
   PGraphics g;
   
-  void setup(Capture webcam, OpenCV opencv, PGraphics g) {
-    this.webcam = webcam;
+  void setup(OpenCV opencv, PGraphics g) {
     this.opencv = opencv;
     this.g = g;
     
@@ -12,19 +10,16 @@ class HSVOffsetSketch extends BaseSketch {
     g.imageMode(CENTER);
   }
   
-  void draw() {
-    if (webcam.available()) {
-      webcam.read();
-      g.background(0);
-      g.blendMode(ADD);
-      g.image(webcam, width/2, height/2, width, height);
-      opencv.loadImage(webcam);
-      opencv.updateBackground();
-      g.colorMode(HSB);
-      g.tint(frameCount % 255, 128, 255);
-      g.colorMode(RGB);
-      g.image(opencv.getSnapshot(), width/2, height/2 - 100, width, height);
-      g.noTint();
-    }
+  void draw(PImage webcam) {
+    g.background(0);
+    g.blendMode(ADD);
+    g.image(webcam, width/2, height/2, width, height);
+    opencv.loadImage(webcam);
+    opencv.updateBackground();
+    g.colorMode(HSB);
+    g.tint(frameCount % 255, 128, 255);
+    g.colorMode(RGB);
+    g.image(opencv.getSnapshot(), width/2, height/2 - 100, width, height);
+    g.noTint();
   }
 }
