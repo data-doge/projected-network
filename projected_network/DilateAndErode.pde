@@ -13,6 +13,7 @@ class DilateAndErode extends BaseSketch {
 
   void draw(PImage video) {
     opencv.loadImage(video);
+    opencv.equalizeHistogram();
     opencv.findScharrEdges(OpenCV.HORIZONTAL);
     dilateAndErode(3);
     edges = opencv.getSnapshot();

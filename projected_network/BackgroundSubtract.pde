@@ -18,18 +18,17 @@ class BackgroundSubtract extends BaseSketch {
 
   void draw(PImage video) {
     g.background(0);
-    g.image(video, 0, 0, width, height);
+//    g.image(video, 0, 0);
     
     opencv.loadImage(video);
+    opencv.equalizeHistogram();
+    g.image(opencv.getSnapshot(), 0, 0);
     opencv.updateBackground();
-    opencv.dilate();
-    opencv.erode();
-    opencv.erode();
 
     g.noFill();
     changeColor();
     g.stroke(h % 360, s % 100, b % 100);
-    g.strokeWeight(1);
+    g.strokeWeight(3);
     for (Contour contour : opencv.findContours()) {
       if (contour.area() > 200) {
         Rectangle boundingBox = contour.getBoundingBox();

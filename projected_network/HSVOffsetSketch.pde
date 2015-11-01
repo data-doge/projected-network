@@ -11,23 +11,24 @@ class HSVOffsetSketch extends BaseSketch {
   
   void draw(PImage webcam) {
     g.background(0);
+    g.image(webcam, 0, 0);
     g.blendMode(ADD);
-    g.image(webcam, 0, 0, width, height);
     opencv.loadImage(webcam);
+    opencv.equalizeHistogram();
     opencv.updateBackground();
     PImage snapshot = opencv.getSnapshot();
     g.colorMode(HSB);
-    g.tint(frameCount % 255, 255, 128);
+    g.tint((millis() / 15) % 255, 255, 128);
     g.colorMode(RGB);
     g.pushMatrix();
-    float dx = 100 * sin(millis() / 1024f);
-    float dy = 100 * cos(millis() / 1231f);
-    g.translate(width/2 + dx, height/2 + dy);
-    g.image(snapshot, -width/2, -height/2, width, height);
-    g.scale(1.2);
-    g.image(snapshot, -width/2, -height/2, width, height);
-    g.scale(1.2);
-    g.image(snapshot, -width/2, -height/2, width, height);
+    float dx = 100 * sin(millis() / 10024f);
+    float dy = 100 * cos(millis() / 10231f);
+    g.translate(width/2.3 + dx, height/2 + dy);
+    g.image(snapshot, -width/2, -height/2);
+    g.scale(1.3);
+    g.image(snapshot, -width/2, -height/2);
+    g.scale(1.3);
+    g.image(snapshot, -width/2, -height/2);
     
     g.popMatrix();
     g.noTint();

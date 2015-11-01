@@ -24,7 +24,6 @@ class Zooming extends BaseSketch {
     centerX = width / 2;
     centerY = height / 2;
     g.background(0);
-    g.blendMode(SUBTRACT);
   }
 
   void draw (PImage video) {
@@ -33,16 +32,16 @@ class Zooming extends BaseSketch {
     setRotation();
     rotateFrame();
     // maskFrame();
-//    g.tint(255, opacity);
+    //    g.tint(255, opacity);
     printFrame(video);
   }
-  
+
   void setZoom () {
     if (zoomDir == "smaller") {
       currentZoom -= zoomSpeed;
     } else if (zoomDir == "bigger") {
       currentZoom += zoomSpeed;
-    }  
+    }
   }
 
   void setDirection () {
@@ -64,7 +63,7 @@ class Zooming extends BaseSketch {
   void rotateFrame () {
     g.translate(centerX, centerY);
     g.rotate(radians(currentDegrees));
-    g.translate(-centerX, -centerY);  
+    g.translate(-centerX, -centerY);
   }
 
   float scale () {
@@ -89,7 +88,12 @@ class Zooming extends BaseSketch {
   // }
 
   void printFrame (PImage currentFrame) {
+    if (frameCount % 5 < 4) {
+      g.blendMode(ADD);
+    } else {
+      g.blendMode(SUBTRACT);
+    }
     g.image(currentFrame, centerX, centerY, scaledFrameWidth(), scaledFrameHeight());
   }
-
 }
+

@@ -92,8 +92,6 @@ void setCurrentSketch(int index) {
   texture = createGraphics(width, height);
 
   texture.beginDraw();
-  texture.imageMode(CORNER);
-  texture.blendMode(BLEND);
   getCurrentSketch().setup(opencv, texture);
   texture.endDraw();
 }
