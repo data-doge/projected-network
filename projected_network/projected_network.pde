@@ -21,6 +21,7 @@ void setup() {
   _webcam = new Capture(this, 640, 480);
   println("got webcam");
   size(displayWidth, displayHeight, P2D);
+  println(width, height);
   
   _webcam.start();
   println("started webcam");
@@ -54,15 +55,15 @@ void draw() {
     fill(255); noStroke();
     beginShape();
     texture(texture);
-    vertex(160, 0, 0, 0);
-    vertex(1098, 0, width, 0);
-    vertex(1056, 1078, width, height);
-    vertex(103, 739, 0, height);
+    vertex(160.0 / 1920 * width, 0, 0, 0);
+    vertex(1098.0 / 1920 * width, 0, width, 0);
+    vertex(1056.0 / 1920 * width, 1078.0 / 1080 * height, width, height);
+    vertex(103.0 / 1920 * width, 739.0 / 1080 * height, 0, height);
     endShape(CLOSE);
   }
   
   // 
-  if (millis() - millisThisSketchStarted >= 60000) {
+  if (millis() - millisThisSketchStarted >= 60000 * 2) {
     setCurrentSketch(currentSketchIndex+1);
   }
   

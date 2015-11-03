@@ -14,8 +14,8 @@ class HalfHalfSplitSketch extends BaseSketch {
     g.blendMode(ADD);
     g.imageMode(CENTER);
     g.translate(cX, cY);
-    g.rotate(millis() / 10023f);
-    g.scale(0.9 + pow(1.3, sin(millis() / 7945f)));
+    g.rotate(millis() / 5023f);
+    g.scale(0.7 + pow(1.3, sin(millis() / 7945f)));
     g.image(img, 0, 0, width/2, height/2);
     g.popMatrix();
   }
